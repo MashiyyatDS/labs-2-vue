@@ -24,6 +24,11 @@ const router = createRouter({
             name: 'tesseract',
             component: () => import('../views/tesseract.vue'),
         },
+        {
+            path: '/ckeditor',
+            name: 'ckeditor',
+            component: () => import('../views/ckeditor.vue'),
+        },
     ],
 })
 
