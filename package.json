@@ -15,10 +15,12 @@
     "@ckeditor/ckeditor5-build-decoupled-document": "^41.3.0",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@mdi/font": "^7.4.47",
+    "cropperjs": "^1.6.2",
     "jsonwebtoken": "^9.0.2",
     "pinia": "^2.1.7",
     "tesseract.js": "^5.0.4",
     "vue": "^3.3.10",
+    "vue-cropperjs": "^5.0.0",
     "vue-router": "^4.2.5",
     "vuetify": "^3.5.2"
   },

@@ -29,6 +29,11 @@ const router = createRouter({
             name: 'ckeditor',
             component: () => import('../views/ckeditor.vue'),
         },
+        {
+            path: '/id-recognition',
+            name: 'id-recognition',
+            component: () => import('@/views/id-recognition.vue'),
+        },
     ],
 })
 
