@@ -6,7 +6,16 @@
         <v-text-field label="Enter Label" variant="outlined" density="compact" v-model="label" />
 
         <div class="id-container">
-            <vue-cropper v-if="idPreview" ref="cropper" :src="idPreview" preview=".preview" :responsive="true" :drag-mode="`move`" :movable="false" />
+            <vue-cropper
+                v-if="idPreview"
+                ref="cropper"
+                :src="idPreview"
+                preview=".preview"
+                :zoomable="false"
+                style="width: 100%; height: 100%"
+                :diabled="true"
+                :drag-mode="`none`"
+                :movable="false" />
             <template v-for="(coordinate, key) in idCoordinates">
                 <span
                     class="font-weight-bold"
@@ -155,7 +164,7 @@ async function scanId() {
 .id-container {
     position: relative;
     height: 100%;
-    width: 100%;
+    width: 800px;
 }
 
 .id-label-box {
