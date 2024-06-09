@@ -7,6 +7,7 @@
 
         <div class="id-container">
             <vue-cropper
+                id="cropperElement"
                 v-if="idPreview"
                 ref="cropper"
                 :src="idPreview"
@@ -43,11 +44,6 @@
             </template>
         </div>
 
-        <!-- <img :src="`${idPreview}`" v-if="idPreview" /> -->
-
-        <!-- <v-btn text="Scan Image" variant="flat" color="blue" size="large" class="rounded-0 text-capitalize" @click="scanImage" />
-        <v-btn text="Save Coordinates" variant="flat" color="blue" size="large" class="rounded-0 text-capitalize" @click="saveCroppedArea" /> -->
-
         <v-btn text="Save Label" variant="flat" color="blue" size="large" class="rounded-0 text-capitalize mr-1" @click="saveLabel" />
         <v-btn text="Scan ID" variant="flat" color="blue" size="large" class="rounded-0 text-capitalize mr-1" @click="scanId" />
 
@@ -65,12 +61,12 @@ import VueCropper from 'vue-cropperjs'
 import Tesseract from 'tesseract.js'
 import 'cropperjs/dist/cropper.css'
 import { ref, watch, reactive } from 'vue'
-import { nextTick } from 'vue'
 
 const file = ref<File[]>()
 
 const idPreview = ref<string | ArrayBuffer | null>('')
 watch(file, () => {
+    idPreview.value = ''
     if (file.value?.length) {
         const [idImage] = file.value
 
@@ -79,6 +75,10 @@ watch(file, () => {
         reader.onload = (event) => (idPreview.value = event.target!.result)
 
         reader.readAsDataURL(idImage)
+
+        setTimeout(() => {
+            cropper.value.reset()
+        }, 1000)
     } else {
         idPreview.value = ''
     }
@@ -100,11 +100,11 @@ const idCoordinates = reactive<{ [key: string]: { top: number; left: number; wid
 
 const cropper = ref()
 const croppedImage = ref('')
-async function saveCroppedArea() {
-    croppedImage.value = cropper.value.getCroppedCanvas().toDataURL()
+async function saveCroppedArea(croppedArea: String) {
+    croppedArea = cropper.value.getCroppedCanvas().toDataURL()
 
     /* Convert base64 to binary array */
-    const binaryData = atob(croppedImage.value.split(',')[1])
+    const binaryData = atob(croppedArea.split(',')[1])
 
     /* Create Blog from binary data */
     const uint8Array = new Uint8Array(Array.from(binaryData, (char) => char.charCodeAt(0)))
@@ -140,13 +140,11 @@ async function scanId() {
 
     Object.assign(idCoordinates, coordinates)
 
-    cropper.value.setCropBoxData(coordinates['TIN'])
-
     Promise.all(
         Object.keys(coordinates).map(async (key) => {
             cropper.value.setCropBoxData(coordinates[key])
 
-            const textResult = await saveCroppedArea()
+            const textResult = await saveCroppedArea(croppedImage.value)
 
             Object.assign(userDetails, {
                 [key]: textResult.replace('\n', ''),
